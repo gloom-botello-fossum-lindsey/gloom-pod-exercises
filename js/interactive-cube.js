@@ -1,103 +1,44 @@
-// let img;
-// let theta = 0;
-//
-//
-// function setup() {
-//     createCanvas(1000, 500, WEBGL);
-//
-//     img = loadImage('img/yes.jpg');
-//
-// }
-//
-// function draw() {
-//     background(250);
-//
-//     translate(0, 0, 0);
-//     push();
-//     rotateZ(frameCount * 0.01);
-//     rotateX(frameCount * 0.01);
-//     rotateY(frameCount * 0.01);
-//     texture(img);
-//     box(200, 200, 200);
-//     pop();
-//     theta += 0.05;
-//
-//     box.position.x = mouseX;
-//     box.position.y = mouseY;
-// }
-//
-//
-let u;
-let l;
-let a;
-let mods = [];
-let x;
-let y;
-let count;
+let img;
+let theta = 0;
+
 
 function setup() {
-    createCanvas(windowWidth, windowHeight);
-    u = 100;
-    l = 20;
-    let highCount = height/80;
-    let wideCount = width/80;
-    count = int(highCount * wideCount);
+    createCanvas(1000, 500, WEBGL);
 
-    let index = 0;
-    for (let xc = 0; xc < wideCount; xc++) {
-        for (let yc = 0; yc < highCount; yc++) {
-            mods[index++] = new Module(int(xc)*u,int(yc)*u);
-        }
-    }
+    img = loadImage('img/yes.jpg');
+
+    angleMode(DEGREES);
+    cam = createCamera();
+
 }
 
 function draw() {
+    background(250);
 
-
-
-    if (mouseIsPressed) {
-        background(0);
-        stroke(255,163,163);
-    } else {
-        background(255,163,163);
-        stroke(255);
-    }
-
-    strokeWeight(15);
-
-    translate(20, 20);
-
-    for (let i = 0; i <= count; i++) {
-        mods[i].update();
-        mods[i].draw2();
-    }
-
-}
-
-function Module(_x, _y) {
-    this.x = _x;
-    this.y = _y;
-    this.a = 0;
-
-
-}
-
-Module.prototype.update = function() {
-    if (mouseIsPressed) {
-        this.a = -20 * (atan2(mouseY-this.y, mouseX-this.x));
-    } else {
-        this.a = atan2(mouseY-this.y, mouseX-this.x);
-    }
-}
-
-Module.prototype.draw2 = function() {
+    translate(0, 0, 0);
     push();
-    translate(this.x, this.y);
-    rotate(this.a);
-    line(-l,0,l,0);
-    pop();
-}
+    // rotateZ(frameCount * 0.01);
+    // rotateX(frameCount * 0.01);
+    // rotateY(frameCount * 0.01);
+    texture(img);
+    box(200, 200, 200);
 
-function windowResized() {
-    resizeCanvas(windowWidth, windowHeight);
+    rotateX(-cam.eyeY);
+    rotateY(cam.eyeX);
+    translate(0, 0, -height/2);
+    plane(width, height);
+
+    pop();
+    theta += 0.05;
+
+    orbitControl();
+    cam.eyeZ = cam.defaultEyeZ;
+
+    let dirX = (mouseX / width - 0.5) * 2;
+    let dirY = (mouseY / height - 0.5) * 2;
+    directionalLight(250, 250, 250, -dirX, -dirY, -1);
+    noStroke();
+    sphere(40);
+
+
 }
