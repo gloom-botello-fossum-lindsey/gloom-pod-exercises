@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>cube reflection [balls]</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <style>
+        body {
+            background:#777;
+            padding:0;
+            margin:0;
+            font-weight: bold;
+            overflow:hidden;
+        }
+        a { color: #ffffff; }
+        #webglmessage a { color:#da0 }
+    </style>
+</head>
+
+<body>
+
+<script src="js/three%20copy.js"></script>
+
+<script src="js/three/examples/js/WebGL.js"></script>
+
+<script>
+    if ( WEBGL.isWebGLAvailable() === false ) {
+        document.body.appendChild( WEBGL.getWebGLErrorMessage() );
+    }
+    var container;
+    var camera, scene, renderer;
+    var spheres = [];
+    var mouseX = 0;
+    var mouseY = 0;
+    var windowHalfX = window.innerWidth / 2;
+    var windowHalfY = window.innerHeight / 2;
+    document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+    init();
+    animate();
+    function init() {
+        container = document.createElement( 'div' );
+        document.body.appendChild( container );
+        camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 100000 );
+        camera.position.z = 3200;
+        scene = new THREE.Scene();
+        scene.background = new THREE.CubeTextureLoader()
+            .setPath( 'js/three/examples/textures/cube/skybox/' )
+            .load( [ 'px.jpg', 'nx.jpg', 'py.jpg', 'ny.jpg', 'pz.jpg', 'nz.jpg' ] );
+            // .setPath( 'js/three/examples/textures/cube/MilkyWay/' )
+            // .load( [ 'dark-s_px.jpg', 'dark-s_nx.jpg', 'dark-s_py.jpg', 'dark-s_ny.jpg', 'dark-s_pz.jpg', 'dark-s_nz.jpg' ] );
+        var geometry = new THREE.SphereBufferGeometry( 100, 32, 16 );
+        var material = new THREE.MeshBasicMaterial( { color: 0xffffff, envMap: scene.background } );
+        for ( var i = 0; i < 500; i ++ ) {
+            var mesh = new THREE.Mesh( geometry, material );
+            mesh.position.x = Math.random() * 10000 - 5000;
+            mesh.position.y = Math.random() * 10000 - 5000;
+            mesh.position.z = Math.random() * 10000 - 5000;
+            mesh.scale.x = mesh.scale.y = mesh.scale.z = Math.random() * 3 + 1;
+            scene.add( mesh );
+            spheres.push( mesh );
+        }
+        //
+        renderer = new THREE.WebGLRenderer();
+        renderer.setPixelRatio( window.devicePixelRatio );
+        renderer.setSize( window.innerWidth, window.innerHeight );
+        container.appendChild( renderer.domElement );
+        //
+        window.addEventListener( 'resize', onWindowResize, false );
+    }
+    function onWindowResize() {
+        windowHalfX = window.innerWidth / 2;
+        windowHalfY = window.innerHeight / 2;
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize( window.innerWidth, window.innerHeight );
+    }
+    function onDocumentMouseMove( event ) {
+        mouseX = ( event.clientX - windowHalfX ) * 10;
+        mouseY = ( event.clientY - windowHalfY ) * 10;
+    }
+    //
+    function animate() {
+        requestAnimationFrame( animate );
+        render();
+    }
+    function render() {
+        var timer = 0.0001 * Date.now();
+        for ( var i = 0, il = spheres.length; i < il; i ++ ) {
+            var sphere = spheres[ i ];
+            sphere.position.x = 5000 * Math.cos( timer + i );
+            sphere.position.y = 5000 * Math.sin( timer + i * 1.1 );
+        }
+        camera.position.x += ( mouseX - camera.position.x ) * .05;
+        camera.position.y += ( - mouseY - camera.position.y ) * .05;
+        camera.lookAt( scene.position );
+        renderer.render( scene, camera );
+    }
+</script>
+
+</body>
+</html>
