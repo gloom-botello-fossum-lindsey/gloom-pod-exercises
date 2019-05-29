@@ -25,7 +25,7 @@ function draw() {
 
     rotateX(-cam.eyeY);
     rotateY(cam.eyeX);
-    translate(0, 0, -height/2);
+    translate(0, 0, -height / 2);
     plane(width, height);
 
     pop();

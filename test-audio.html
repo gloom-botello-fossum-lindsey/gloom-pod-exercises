@@ -9,30 +9,29 @@
 <script src="js/three/build/three.js"></script>
 
 
-
 <script>
 
     var listener = new THREE.AudioListener();
-    camera.add( listener );
+    camera.add(listener);
 
 
-    var sound = new THREE.PositionalAudio( listener );
+    var sound = new THREE.PositionalAudio(listener);
 
     var audioLoader = new THREE.AudioLoader();
-    audioLoader.load( 'sounds/ambient.ogg', function( buffer ) {
-        sound.setBuffer( buffer );
-        sound.setRefDistance( 20 );
+    audioLoader.load('sounds/ambient.ogg', function (buffer) {
+        sound.setBuffer(buffer);
+        sound.setRefDistance(20);
         sound.play();
     });
 
 
-    var sphere = new THREE.SphereGeometry( 20, 32, 16 );
-    var material = new THREE.MeshPhongMaterial( { color: 0xff2200 } );
-    var mesh = new THREE.Mesh( sphere, material );
-    scene.add( mesh );
+    var sphere = new THREE.SphereGeometry(20, 32, 16);
+    var material = new THREE.MeshPhongMaterial({color: 0xff2200});
+    var mesh = new THREE.Mesh(sphere, material);
+    scene.add(mesh);
 
 
-    mesh.add( sound );
+    mesh.add(sound);
 
 
 </script>
